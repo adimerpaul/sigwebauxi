@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+
+    <title>Hello, world!</title>
+    <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    #map {
+      width: 600px;
+      height: 400px;
+    }
+  </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+    <a class="navbar-brand" href="#">Pedido</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link active" href="#">Pedido</a>
+        <a class="nav-item nav-link" href="#">Precio</a>
+        <a class="nav-item nav-link" href="#">Historial</a>
+      </div>
+    </div>
+  </div>
+  </nav>
+<center>
+<div id='map'></div>
+
+<button class="btn btn-success" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-motorcycle" aria-hidden="true"></i> Pedir pedido</button>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="nombre" class="col-sm-2 col-form-label">nombre</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="nombre">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="calle" class="col-sm-2 col-form-label">calle</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="calle">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="pizza" class="col-sm-2 col-form-label">pizza</label>
+            <div class="col-sm-10">
+              <select class="form-control" id="pizza">
+                <option value="pizza pequeña">pizza pequeña</option>
+                <option value="pizza mediana">pizza mediana</option>
+                <option value="pizza grande">pizza grande</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <i class="fa fa-trash"></i> Close</button>
+        <button type="button" class="btn btn-success" id="pedido"> <i class="fa fa-plus"></i> Enviar pedido</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</center>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!--script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script-->
+  <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
+<script>
+    // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDLxHYFaOjCXi7x2LZHej8JOTm6PsWdUkU",
+    authDomain: "pedido-e5692.firebaseapp.com",
+    databaseURL: "https://pedido-e5692.firebaseio.com",
+    projectId: "pedido-e5692",
+    storageBucket: "pedido-e5692.appspot.com",
+    messagingSenderId: "586155112673",
+    appId: "1:586155112673:web:6d78b999696d35906b1fa0"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+
+
+var marker=[]
+db.collection("pedidos")
+.where("estado", "==", "pendiente")
+    .onSnapshot(function(querySnapshot) {
+        //var cities = [];
+        for(i=0;i<marker.length;i++) {
+            map.removeLayer(marker[i]);
+            //  map.addLayer(marker[i]);
+          }  
+        marker=[];
+        querySnapshot.forEach(function(doc) {
+            //cities.push(doc.data().name);
+            //console.log(doc.data().lat);
+            var lamMarker=new L.marker([doc.data().lat,doc.data().lng]);
+            marker.push(lamMarker);
+        });
+        //console.log("Current cities in CA: ", cities.join(", "));
+         for(i=0;i<marker.length;i++) {
+            //map.removeLayer(marker[i]);
+            map.addLayer(marker[i]);
+          }  
+    });
+
+
+
+/*db.collection("users").add({
+    first: "Ada",
+    last: "Lovelace",
+    born: 1815
+})
+.then(function(docRef) {
+    console.log("Document written with ID: ", docRef.id);
+})
+.catch(function(error) {
+    console.error("Error adding document: ", error);
+});
+*/
+
+  var map = L.map('map').fitWorld();
+
+  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    maxZoom: 18,
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1
+  }).addTo(map);
+  var lat,lng;
+  function onLocationFound(e) {
+    var radius = e.accuracy / 2;
+
+    //L.marker(e.latlng).addTo(map)
+    //  .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    //L.circle(e.latlng, radius).addTo(map);
+    
+    lat=e.latlng.lat;
+    lng=e.latlng.lng;
+    //console.log(lat);
+  }
+
+  function onLocationError(e) {
+    alert(e.message);
+  }
+
+  map.on('locationfound', onLocationFound);
+  map.on('locationerror', onLocationError);
+
+  map.locate({setView: true, maxZoom: 16});
+
+
+  $('#pedido').click(function(e){
+    db.collection("pedidos").add({
+        nombre: $('#nombre').val(),
+        calle: $('#calle').val(),
+        pizza: $('#pizza').val(),
+        lat: lat,
+        lng: lng,
+        estado:'pendiente'
+    })
+    .then(function(docRef) {
+        console.log("Document written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+
+    $('#exampleModal').modal('hide')
+  });
+</script>
+
+  </body>
+</html>
